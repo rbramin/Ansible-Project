@@ -1,0 +1,85 @@
+---
+- name: Install dependencies
+  package:
+    name:
+      - httpd
+      - php
+      - gcc
+      - glibc
+      - glibc-common
+      - perl
+      - wget
+      - unzip
+      - make
+    state: present
+
+- name: Create nagios user
+  user:
+    name: nagios
+    state: present
+
+- name: Create nagcmd group
+  group:
+    name: nagcmd
+    state: present
+
+- name: Add users to nagcmd
+  user:
+    name: "{{ item }}"
+    groups: nagcmd
+    append: yes
+  loop:
+    - nagios
+    - apache
+
+- name: Download Nagios
+  get_url:
+    url: https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.14.tar.gz
+    dest: /tmp/nagios.tar.gz
+
+- name: Extract Nagios
+  unarchive:
+    src: /tmp/nagios.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Compile Nagios
+  command: "./configure --with-command-group=nagcmd"
+  args:
+    chdir: /tmp/nagios-4.4.14
+
+- command: make all
+  args:
+    chdir: /tmp/nagios-4.4.14
+
+- command: make install
+  args:
+    chdir: /tmp/nagios-4.4.14
+
+- command: make install-init
+  args:
+    chdir: /tmp/nagios-4.4.14
+
+- command: make install-config
+  args:
+    chdir: /tmp/nagios-4.4.14
+
+- command: make install-commandmode
+  args:
+    chdir: /tmp/nagios-4.4.14
+
+- command: make install-webconf
+  args:
+    chdir: /tmp/nagios-4.4.14
+
+- name: Set Nagios admin password
+  command: htpasswd -cb /usr/local/nagios/etc/htpasswd.users {{ nagios_admin_user }} {{ nagios_admin_password }}
+
+- name: Enable services
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  loop:
+    - httpd
+    - nagios

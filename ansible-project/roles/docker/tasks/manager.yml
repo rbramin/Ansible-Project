@@ -1,0 +1,24 @@
+---
+- name: Install Docker packages
+  package:
+    name: "{{ docker_packages }}"
+    state: present
+
+- name: Enable Docker
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Initialize Docker Swarm
+  command: docker swarm init --advertise-addr {{ docker_swarm_manager_ip }}
+  when: docker_swarm_init | default(false)
+
+- name: Get worker join token
+  command: docker swarm join-token -q worker
+  register: worker_token
+  when: docker_swarm_init | default(false)
+
+- set_fact:
+    swarm_worker_token: "{{ worker_token.stdout }}"
+  when: docker_swarm_init | default(false)

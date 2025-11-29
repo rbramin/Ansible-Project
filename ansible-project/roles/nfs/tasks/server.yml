@@ -1,0 +1,26 @@
+---
+- name: Install nfs-utils
+  package:
+    name: nfs-utils
+    state: present
+
+- name: Create export directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0777"
+  loop: "{{ nfs_exports }}"
+
+- name: Deploy /etc/exports
+  template:
+    src: exports.j2
+    dest: /etc/exports
+
+- name: Reload exports
+  command: exportfs -arv
+
+- name: Enable NFS
+  service:
+    name: nfs-server
+    state: started
+    enabled: yes

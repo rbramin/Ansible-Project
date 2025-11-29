@@ -1,0 +1,39 @@
+---
+- name: Install vsftpd
+  package:
+    name: vsftpd
+    state: present
+
+- name: Enable & start vsftpd
+  service:
+    name: vsftpd
+    state: started
+    enabled: yes
+
+- name: Create FTP user
+  user:
+    name: "{{ ftp_user }}"
+    shell: "{{ ftp_shell }}"
+    state: present
+
+- name: Set FTP user password
+  user:
+    name: "{{ ftp_user }}"
+    password: "{{ ftp_password | password_hash('sha512') }}"
+
+- name: Allow local users
+  lineinfile:
+    path: /etc/vsftpd/vsftpd.conf
+    regexp: '^#?local_enable='
+    line: local_enable=YES
+
+- name: Allow write
+  lineinfile:
+    path: /etc/vsftpd/vsftpd.conf
+    regexp: '^#?write_enable='
+    line: write_enable=YES
+
+- name: Restart vsftpd
+  service:
+    name: vsftpd
+    state: restarted

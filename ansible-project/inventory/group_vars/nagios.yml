@@ -1,0 +1,2 @@
+nagios_web_user: "nagiosadmin"
+nagios_web_pass: "admin123"

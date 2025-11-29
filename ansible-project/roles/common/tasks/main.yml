@@ -1,0 +1,21 @@
+---
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"
+
+- name: Install common packages
+  package:
+    name: "{{ packages_common }}"
+    state: present
+
+- name: Enable firewall services
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ firewall_allow_services }}"
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Reload firewall
+  command: firewall-cmd --reload
+  when: ansible_facts['os_family'] == "RedHat"

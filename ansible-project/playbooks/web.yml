@@ -1,0 +1,6 @@
+---
+- name: Configure all web servers
+  hosts: prdx-webserver101
+  become: yes
+  roles:
+    - web

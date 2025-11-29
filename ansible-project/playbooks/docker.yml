@@ -1,0 +1,6 @@
+---
+- name: Configure Docker server
+  hosts: prdx-dprimary101
+  become: yes
+  roles:
+    - docker

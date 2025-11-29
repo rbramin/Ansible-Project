@@ -1,0 +1,32 @@
+---
+- name: Install Apache
+  package:
+    name: httpd
+    state: present
+
+- name: Create web root
+  file:
+    path: /var/www/html
+    state: directory
+
+- name: Deploy index.html
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+
+- name: Enable Apache
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Allow HTTP firewall
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Reload firewall
+  command: firewall-cmd --reload
+  when: ansible_facts['os_family'] == "RedHat"

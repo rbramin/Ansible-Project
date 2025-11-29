@@ -1,0 +1,14 @@
+---
+- name: Create config directory
+  file:
+    path: /usr/local/nagios/etc/servers
+    state: directory
+
+- name: Deploy host configs
+  template:
+    src: nagios_host.cfg.j2
+    dest: /usr/local/nagios/etc/servers/{{ item.key }}.cfg
+  loop: "{{ nagios_monitored_hosts | dict2items }}"
+
+- name: Validate Nagios config
+  command: /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg

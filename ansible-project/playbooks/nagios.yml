@@ -1,0 +1,6 @@
+---
+- name: Configure Nagios server
+  hosts: prdx-nagios101
+  become: yes
+  roles: 
+    - nagios 

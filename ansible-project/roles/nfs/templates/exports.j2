@@ -1,0 +1,3 @@
+{% for exp in nfs_exports %}
+{{ exp.path }} {{ exp.options }}
+{% endfor %}

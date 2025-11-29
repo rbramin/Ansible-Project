@@ -1,0 +1,4 @@
+---
+domain_name: "ziyotek.local"
+ntp_server: "192.168.29.150"
+timezone: "UTC"

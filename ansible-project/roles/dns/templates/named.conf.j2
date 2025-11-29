@@ -1,0 +1,26 @@
+options {
+    listen-on port 53 { 127.0.0.1; {{ dns_ip }}; };
+    listen-on-v6 port 53 { ::1; };
+    directory "/var/named";
+    dump-file "/var/named/data/cache_dump.db";
+    statistics-file "/var/named/data/named_stats.txt";
+    recursion yes;
+
+    forwarders {
+        {% for fw in dns_forwarders %}
+        {{ fw }};
+        {% endfor %}
+    };
+
+    allow-query { 127.0.0.1; 192.168.29.0/24; };
+};
+
+zone "{{ domain_name }}" IN {
+    type master;
+    file "forward.{{ domain_name }}";
+};
+
+zone "{{ reverse_zone }}" IN {
+    type master;
+    file "reverse.{{ reverse_zone }}";
+};

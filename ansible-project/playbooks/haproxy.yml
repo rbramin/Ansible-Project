@@ -1,0 +1,6 @@
+---
+- name: Configure Haproxy server
+  hosts: prdx-haproxy101
+  become: yes
+  roles: 
+    - haproxy  

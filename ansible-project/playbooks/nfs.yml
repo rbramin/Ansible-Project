@@ -1,0 +1,6 @@
+---
+- name: Configure NFS server
+  hosts: prdx-nfs101
+  become: yes
+  roles:
+    - nfs 

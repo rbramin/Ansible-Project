@@ -1,0 +1,6 @@
+---
+- name: Configure ftp server
+  hosts: prdx-ftp101
+  become: yes
+  roles:
+    - ftp

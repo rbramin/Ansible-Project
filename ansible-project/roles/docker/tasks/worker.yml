@@ -1,0 +1,15 @@
+---
+- name: Install Docker packages
+  package:
+    name: "{{ docker_packages }}"
+    state: present
+
+- name: Enable Docker
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Join Docker Swarm
+  command: docker swarm join --token {{ hostvars['prdx-dprimary101'].swarm_worker_token }} {{ docker_swarm_manager_ip }}:2377
+  when: docker_swarm_join | default(false)

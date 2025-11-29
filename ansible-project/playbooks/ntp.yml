@@ -1,0 +1,6 @@
+---
+- name: Configure NTP server
+  hosts: prdx-ntp101
+  become: yes
+  roles:  
+    - ntp 

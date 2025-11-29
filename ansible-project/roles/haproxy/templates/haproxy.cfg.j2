@@ -1,0 +1,20 @@
+global
+  log /dev/log local0
+  daemon
+
+defaults
+  log global
+  mode http
+  timeout connect 5000
+  timeout client 50000
+  timeout server 50000
+
+frontend http_front
+  bind *:{{ haproxy_frontend_port }}
+  default_backend http_back
+
+backend http_back
+  balance roundrobin
+{% for srv in haproxy_backend_servers %}
+  server {{ srv.name }} {{ srv.ip }}:{{ srv.port }} check
+{% endfor %}

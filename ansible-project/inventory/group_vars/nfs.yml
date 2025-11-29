@@ -1,0 +1,2 @@
+nfs_export_path: "/var/nfs/shared"
+nfs_network: "192.168.29.0/24"

@@ -1,0 +1,6 @@
+---
+- name: Configure DNS server
+  hosts: prdx-nsprimary101
+  become: yes
+  roles:
+    - dns

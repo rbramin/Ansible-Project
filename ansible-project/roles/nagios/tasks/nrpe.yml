@@ -1,0 +1,22 @@
+---
+- name: Install NRPE & plugins
+  package:
+    name:
+      - nrpe
+      - nagios-plugins-nrpe
+      - nagios-plugins-disk
+      - nagios-plugins-load
+      - nagios-plugins-procs
+      - nagios-plugins-ping
+    state: present
+
+- name: Deploy NRPE config
+  template:
+    src: nrpe.cfg.j2
+    dest: /etc/nagios/nrpe.cfg
+
+- name: Enable NRPE
+  service:
+    name: nrpe
+    state: started
+    enabled: yes

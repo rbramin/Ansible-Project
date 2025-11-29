@@ -1,0 +1,17 @@
+---
+- name: Install chrony
+  package:
+    name: chrony
+    state: present
+
+- name: Deploy NTP configuration
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    mode: '0644'
+
+- name: Restart chronyd
+  service:
+    name: chronyd
+    state: restarted
+    enabled: yes
